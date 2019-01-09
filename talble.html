@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<style>
+			td,th{
+				cursor: pointer;
+				border: 1px solid gainsboro;
+			}
+			/*tr {
+				border: 1px solid black;
+			}*/
+			table{
+				background-color: whitesmoke;
+				margin: auto;
+			}
+		</style>
+		<script>
+			window.onload = function() {
+				var infor = [{
+						id: 10000,
+						name: "中华人民共和国",
+						mailnumber: "123120",
+						address: "亚洲",
+						under: [{
+								id: 11000,
+								name: "北京",
+								mailnumber: "12300",
+								address: "中国",
+								under: [{
+									id: 11100,
+									name: "朝阳",
+									mailnumber: "12340",
+									address: "北京",
+									under: [],
+								}],
+							},
+
+							{
+								id: 12000,
+								name: "上海",
+								mailnumber: "22300",
+								address: "中国",
+								under: [{
+									id: 12100,
+									name: "东方明珠",
+									mailnumber: "223340",
+									address: "上海",
+									under: [],
+								}],
+							},
+
+							{
+								id: 13000,
+								name: "深圳",
+								mailnumber: "32300",
+								address: "中国",
+								under: [{
+									id: 13100,
+									name: "随便",
+									mailnumber: "1002340",
+									address: "深圳",
+									under: [],
+								}],
+							}
+						],
+					},
+					{
+						id: 20000,
+						name: "美利坚合众国",
+						mailnumber: "123120",
+						address: "美洲",
+						under: []
+					}
+
+				]
+
+				var table1 = document.createElement("table");
+				var tr=document.createElement("tr");
+				var th=[];
+				var titles=["id","name","mail","addr"];
+				for(var i=0;i<4;i++){
+					th[i]=document.createElement("th");
+					th[i].textContent=titles[i];
+					tr.appendChild(th[i]);
+				}
+				table1.appendChild(tr);
+				
+				function inittable(list,level) {
+					var cnodes = [];
+					for(var ii = 0; ii < list.length; ii++) {
+						(function(i) {
+							var cnode = {};
+							var tr = document.createElement("tr");
+							var listCont=[];
+							var td=[];
+							for(var item in list[i]){
+								listCont.push(list[i][item]);
+							};
+							for(var t=0;t<4;t++){
+								td[t]=document.createElement("td");
+								td[t].textContent = listCont[t];
+								td[t].style.paddingLeft=10+level*30+"px";
+								td[t].style.paddingRight="30px";
+								tr.appendChild(td[t]);
+							}
+							table1.appendChild(tr);
+							cnode.child = inittable(list[i].under,level+1);
+							cnode.el = tr;
+							if(level==0){
+								cnode.el.style.display="table-row";
+								cnode.ishidden==false;
+							}
+							else{
+								cnode.el.style.display="none";
+								cnode.ishidden = true;
+							}
+							cnode.name = list[i].name;
+							cnode.hiddenchild = function() {
+								for(var j = 0; j < cnode.child.length; j++) {
+									cnode.child[j].el.style.display = "none";
+									cnode.child[j].hiddenchild();
+								}
+								cnode.ishidden = true;
+							}
+							cnode.showchild = function() {
+								for(var j = 0; j < cnode.child.length; j++) {
+									cnode.child[j].el.style.display = "table-row";
+								}
+								cnode.ishidden = false;
+							}
+
+							cnode.el.onclick = function() {
+								if(cnode.ishidden == false) {
+									cnode.hiddenchild();
+								} else {
+									cnode.showchild();
+								}
+							}
+							cnodes.push(cnode);
+						})(ii)
+					}
+					return cnodes;
+				}
+
+				console.log(inittable(infor,0))
+				document.body.appendChild(table1);
+
+			}
+		</script>
+	</head>
+
+	<body>
+
+	</body>
+
+</html>
